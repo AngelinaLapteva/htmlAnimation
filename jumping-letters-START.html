@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumping Letters!</title>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h2 class="jump">Jumping Letters!</h2>
+  </div>
+
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin: 0;
+      background:#f1c40f;
+    }
+
+    .wrapper {
+      display: flex;
+      height:100vh;
+      width: 100%;
+    }
+    .jump {
+      text-transform: uppercase;
+      color:white;
+      text-shadow:5px 5px 0 rgba(0,0,0,0.1);
+
+      font-size: 6.25vw;
+      margin: 0;
+      flex:1;
+      align-self:center;
+    }
+
+    .jump span {
+      position: relative;
+      top:0;
+      transform:none;
+      transition:all .2s;
+      cursor:crosshair;
+      display:inline-block;
+      white-space: pre;/* recpect space*/
+    }
+    .jump span.up, .jump span:hover {
+      top:-10px;
+      color:black;
+      opacity:1;
+      scale:2;
+      rotate:200deg;
+      skew:10deg;
+    }
+  </style>
+
+  <script>
+var jump=document.querySelector('.jump');
+var jumpText=jump.textContent;
+var jumpSpans = jumpText
+                        .split('')
+                        .map((letter)=> `<span>${letter}</span>`)
+                        .join(''); 
+                        // instead of map(function(letter) and return `<span>${letter}</span>`;
+
+jump.innerHTML=jumpSpans;
+
+
+var current;
+setInterval(function(){
+  // first check if there is no current element - if no current exists
+  if (!current) {
+    // if there is not one then just select the first one
+    current=document.querySelector('.jump span')
+  }
+// skip white space
+  if (current.textContent===' '){
+    current=current.nextSibling;
+  }
+  // add a class of up to the current one
+  current.classList.toggle('up');
+
+  // for the next time around, update "current" to be the element next  to it
+  
+  current=current.nextSibling;
+
+},200);
+
+
+// when the letter is done transitioning up, take the class "up" off
+function removeUp(){
+  this.classList.remove('up');
+}
+var spans=document.querySelectorAll('.jump span');
+ // without jquery you can work with array elemnts, you have to loop over it every time, transitionend is an event, obviously
+spans.forEach(span => span.addEventListener('transitionend',removeUp));
+// or span.forEach(function(spab){span.addEventListener})
+  </script>
+
+</body>
+</html>
